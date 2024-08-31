@@ -1,5 +1,6 @@
-train: /Users/gangsiu/PycharmProjects/ObjectDetectionTrain/dataset/train/images
-val: /Users/gangsiu/PycharmProjects/ObjectDetectionTrain/dataset/val/images
+train: ./ObjectDetectionTrain/dataset/train/images
+val: ./ObjectDetectionTrain/dataset/val/images
+test: ./ObjectDetectionTrain/dataset/test/images
 
-nc: 1  # 클래스 수
-names: ['tiniping']  # 클래스 이름 목록
+nc: 1
+names: ['티니핑']

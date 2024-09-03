@@ -1,28 +1,31 @@
 from ultralytics import YOLO
 import os
-import json
+import matplotlib.pyplot as plt
 
-# 1. YOLO v8 모델 로드
-model = YOLO('yolov8n.pt')  # 'yolov8n.pt'는 사전 학습된 YOLOv8 모델 가중치 파일입니다.
+# 1. 한글 폰트 설정
+plt.rcParams['font.family'] = 'AppleGothic'  # MacOS 예시 (AppleGothic 폰트 사용)
 
-# 2. 모델 학습
+# 2. YOLO v8 모델 로드
+model = YOLO('/Users/gangsiu/PycharmProjects/detect/coopaAI9/weights/best.pt')
+
+# 3. MacBook M2 GPU 설정 (Metal backend 사용)
+import torch
+
+if torch.backends.mps.is_available():
+    device = 'mps'  # MacOS에서 GPU 사용을 위한 Metal Performance Shaders(MPS) 설정
+else:
+    device = 'cpu'
+    print("MPS is not available, using CPU instead. Ensure you're on a Mac with a Metal-compatible GPU.")
+
+# 4. 모델 학습 (검증 생략)
 model.train(
     data='./data.yaml',  # 데이터셋 설정 파일 경로
-    epochs=10,           # 학습 에폭 수
-    patience=10,         # 조기 종료 기준
-    batch=32,            # 배치 크기
-    imgsz=416,           # 입력 이미지 크기
+    epochs=30,           # 학습 에폭 수 (추천 값으로 조정)
+    patience=15,         # 조기 종료 기준 (추천 값으로 조정)
+    batch=4,             # 배치 크기 (MacBook M2의 메모리 제약에 맞추어 조정)
+    imgsz=640,           # 입력 이미지 크기 (추천 값으로 조정)
     save=True,           # 학습된 모델을 저장할지 여부 (기본값 True)
-    name='coopaAI'       # 학습 결과가 저장될 폴더 이름
+    name='coopaAI',      # 학습 결과가 저장될 폴더 이름
+    device=device,       # GPU 설정 추가
+    pretrained=True
 )
-
-# 3. 저장 경로 확인
-weights_dir = os.path.join('runs', 'train', 'coopaAI', 'weights')
-best_model_path = os.path.join(weights_dir, 'best.pt')
-last_model_path = os.path.join(weights_dir, 'last.pt')
-
-# 학습 후 저장된 모델 파일 확인
-if os.path.exists(best_model_path) and os.path.exists(last_model_path):
-    print(f"Model saved successfully:\nBest model: {best_model_path}\nLast model: {last_model_path}")
-else:
-    print("Error: Model files not found. Check training settings or paths.")

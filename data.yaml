@@ -2,5 +2,5 @@ train: ./ObjectDetectionTrain/dataset/train/images
 val: ./ObjectDetectionTrain/dataset/val/images
 test: ./ObjectDetectionTrain/dataset/test/images
 
-nc: 1
-names: ['티니핑']
+nc: 2
+names: ['티니핑', '티니핑_복숭아']
